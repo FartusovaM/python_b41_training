@@ -1,5 +1,3 @@
-import time
-
 from selenium.webdriver.support.ui import Select
 from model.contact import Contact
 
@@ -15,7 +13,6 @@ class ContactHelper:
         self.fill_contact_form(contact)
         # submit contact creation
         wd.find_element_by_name("submit").click()
-        time.sleep(0.1)
         self.go_to_home_page()
 
     def delete_first_contact(self):
