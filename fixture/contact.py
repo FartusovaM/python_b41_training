@@ -1,8 +1,10 @@
+import time
+
 from selenium.webdriver.support.ui import Select
+from model.contact import Contact
 
 
 class ContactHelper:
-
     def __init__(self, app):
         self.app = app
 
@@ -13,7 +15,8 @@ class ContactHelper:
         self.fill_contact_form(contact)
         # submit contact creation
         wd.find_element_by_name("submit").click()
-        self.return_to_home_page()
+        time.sleep(0.1)
+        self.go_to_home_page()
 
     def delete_first_contact(self):
         wd = self.app.wd
@@ -32,15 +35,16 @@ class ContactHelper:
         # fill contact form
         self.fill_contact_form(new_group_data)
         wd.find_element_by_name("update").click()
-        self.return_to_home_page()
+        self.go_to_home_page()
 
     def select_first_contact(self):
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()
 
-    def return_to_home_page(self):
+    def go_to_home_page(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home page").click()
+        if not (wd.current_url.endswith("/index.php") or wd.current_url.endswith("/")):
+            wd.find_element_by_link_text("home").click()
 
     def fill_contact_form(self, contact):
         self.change_input_field_value("firstname", contact.firstname)
@@ -87,3 +91,14 @@ class ContactHelper:
         wd = self.app.wd
         self.app.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))
+
+    def get_contact_list(self):
+        wd = self.app.wd
+        self.app.open_home_page()
+        contacts = []
+        for element in wd.find_elements_by_css_selector('table[id="maintable"] tr[name=entry]'):
+            lastname = element.find_element_by_css_selector('td:nth-child(2)').text
+            firstname = element.find_element_by_css_selector('td:nth-child(3)').text
+            contact_id = element.find_element_by_name("selected[]").get_attribute("value")
+            contacts.append(Contact(lastname=lastname, firstname=firstname, id=contact_id))
+        return contacts

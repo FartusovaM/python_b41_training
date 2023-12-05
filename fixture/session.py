@@ -1,6 +1,3 @@
-import time
-
-
 class SessionHelper:
 
     def __init__(self, app):
@@ -31,10 +28,8 @@ class SessionHelper:
         return len(wd.find_elements_by_link_text("Logout")) > 0
 
     def ensure_login(self, username, password):
-        print("is_logged_in")
         if self.is_logged_in():
             if self.is_logged_in_as(username):
-                print("username")
                 return
             else:
                 self.logout()

@@ -1,7 +1,6 @@
 from fixture.application import Application
 import pytest
 
-
 fixture: None | Application = None
 
 

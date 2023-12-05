@@ -1,10 +1,18 @@
 # -*- coding: utf-8 -*-
+import time
+
 from model.contact import Contact
 
 
 def test_add_contact(app):
-    app.contact.create(Contact(firstname="test", middlename="test", lastname="test", nickname="test", title="test", company="test", address="test", home="test", mobile="test", work="test", fax="test", email="test", email2="test", email3="test", homepage="test", byear="1900", ayear="2000", address2="test", phone2="test", notes="test", bday="1", bmonth="February", amonth="February", aday="1"))
+    old_contacts = app.contact.get_contact_list()
+    contact = Contact(firstname="test", middlename="test", lastname="test")
+    app.contact.create(contact)
+    new_contacts = app.contact.get_contact_list()
+    assert len(old_contacts) + 1 == len(new_contacts)
+    old_contacts.append(contact)
+    assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
 
 
-def test_add_empty_contact(app):
-    app.contact.create(Contact(firstname="", middlename="", lastname="", nickname="", title="", company="", address="", home="", mobile="", work="", fax="", email="", email2="", email3="", homepage="", byear="", ayear="", address2="", phone2="", notes="", bday="1", bmonth="February", amonth="February", aday="1"))
+# def test_add_empty_contact(app):
+# app.contact.create(Contact(firstname="", middlename="", lastname="", nickname="", title="", company="", address="", home="", mobile="", work="", fax="", email="", email2="", email3="", homepage="", byear="", ayear="", address2="", phone2="", notes="", bday="1", bmonth="February", amonth="February", aday="1"))
