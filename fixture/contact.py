@@ -17,20 +17,25 @@ class ContactHelper:
         self.contact_cache = None
 
     def delete_first_contact(self):
+        self.delete_contact_by_index(0)
+
+    def delete_contact_by_index(self, index):
         wd = self.app.wd
         self.app.open_home_page()
-        # select first contact
-        self.select_first_contact()
+        self.select_contact_by_index(index)
         # submit deletion
         wd.find_element_by_xpath(f"//input[@value='Delete']").click()
         wd.switch_to.alert.accept()
         self.contact_cache = None
 
-    def modify_first_contact(self, new_group_data):
+    def modify_first_contact(self):
+        self.modify_contact_by_index(0)
+
+    def modify_contact_by_index(self, index, new_group_data):
         wd = self.app.wd
         self.app.open_home_page()
-        self.select_first_contact()
-        wd.find_element_by_xpath(f"//a//img[@title='Edit']").click()
+        self.select_contact_by_index(index)
+        self.edit_contact_by_index(index)
         # fill contact form
         self.fill_contact_form(new_group_data)
         wd.find_element_by_name("update").click()
@@ -40,6 +45,15 @@ class ContactHelper:
     def select_first_contact(self):
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()
+
+    def select_contact_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[index].click()
+
+    def edit_contact_by_index(self, index):
+        wd = self.app.wd
+        contact = wd.find_elements_by_css_selector("table[id='maintable'] tr[name='entry']")[index]
+        contact.find_element_by_css_selector("a img[title='Edit']").click()
 
     def go_to_home_page(self):
         wd = self.app.wd
