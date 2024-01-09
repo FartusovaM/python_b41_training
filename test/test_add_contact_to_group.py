@@ -12,7 +12,7 @@ def test_add_contact_to_group(app, db):
     all_groups = db.get_group_list()
     contact = random.choice(all_contacts)
     group = random.choice(all_groups)
-    app.contact.add(contact.id, group.id)
+    app.contact.add_contact_to_group(contact.id, group.id)
     app.contact.go_to_home_page()
     app.contact.select_group_in_filter(group.id)
     all_contacts_in_group = app.contact.find_elements_in_list()

@@ -181,7 +181,7 @@ class ContactHelper:
                        home=homephone, mobile=mobilephone, work=workphone, secondaryphone=secondaryphone,
                        email=email, email2=email2, email3=email3)
 
-    def add_contact_to_group(self):
+    def add_contact_to_group_button(self):
         wd = self.app.wd
         wd.find_element_by_xpath(f"//input[@name='add']").click()
 
@@ -189,10 +189,10 @@ class ContactHelper:
         wd = self.app.wd
         wd.find_element_by_xpath(f"//input[@name='remove']").click()
 
-    def add(self, contact_id, group_id):
+    def add_contact_to_group(self, contact_id, group_id):
         self.select_contact_by_id(contact_id)
         self.select_group_in_list(group_id)
-        self.add_contact_to_group()
+        self.add_contact_to_group_button()
 
     def select_group_in_filter(self, id):
         wd = self.app.wd
