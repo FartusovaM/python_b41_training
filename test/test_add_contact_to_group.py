@@ -4,14 +4,17 @@ import random
 
 
 def test_add_contact_to_group(app, db):
-    if len(db.get_contact_list()) == 0:
-        app.contact.create(Contact(firstname="new_contact_preconditions"))
+    contacts_without_group = app.orm.get_contacts_without_group()
+    if len(contacts_without_group) == 0:
+        app.contact.create(Contact(firstname="new_contact_without_group"))
+        contacts_without_group = app.orm.get_contacts_without_group()
     if len(db.get_group_list()) == 0:
         app.group.create(Group(name="group_preconditions"))
-    all_contacts = app.contact.get_contact_list()
+
     all_groups = db.get_group_list()
-    contact = random.choice(all_contacts)
+    contact = random.choice(contacts_without_group)
     group = random.choice(all_groups)
+
     app.contact.add_contact_to_group(contact.id, group.id)
     app.contact.go_to_home_page()
     app.contact.select_group_in_filter(group.id)

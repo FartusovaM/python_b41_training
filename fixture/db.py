@@ -1,6 +1,7 @@
 import pymysql.cursors
 from model.group import Group
 from model.contact import Contact
+import re
 
 
 class DbFixture:
@@ -26,17 +27,22 @@ class DbFixture:
 
     def get_contact_list(self):
         cursor = self.connection.cursor()
-        list = []
+        contact_list = []
         try:
-            cursor.execute("select id, firstname, lastname, address, home, mobile, work, email, email2, email3 from addressbook where deprecated='0000-00-00 00:00:00'")
+            cursor.execute("select id, firstname, lastname, address, home, mobile, work, email, email2, email3, phone2 from addressbook where deprecated='0000-00-00 00:00:00'")
             for row in cursor:
-                (id, firstname, lastname, address, home, mobile, work, email, email2, email3) = row
-                all_emails_from_home_page = ':'.join(filter(lambda x: x != "" and x is not None, [email, email2, email3]))
-                all_phones_from_home_page = ':'.join(filter(lambda x: x != "" and x is not None, [home, mobile, work]))
-                list.append(Contact(id=str(id), firstname=firstname, lastname=lastname, address=address, email=email, email2=email2, email3=email3, home=home, mobile=mobile, work=work, all_phones_from_home_page=all_phones_from_home_page, all_emails_from_home_page=all_emails_from_home_page))
+                (id, firstname, lastname, address, home, mobile, work, email, email2, email3, phone2) = row
+                emails = list(filter(lambda x: x != "" and x is not None, [email, email2, email3]))
+                all_emails_from_home_page = ':'.join(emails) if len(emails) else None
+                phones = list(filter(lambda x: x != "" and x is not None, [home, mobile, work, phone2]))
+                all_phones_from_home_page = ':'.join(map(lambda x: self.clear(x), phones)) if len(phones) else None
+                contact_list.append(Contact(id=str(id), firstname=firstname, lastname=lastname, address=address or None, email=email, email2=email2, email3=email3, home=home, mobile=mobile, work=work, all_phones_from_home_page=all_phones_from_home_page, all_emails_from_home_page=all_emails_from_home_page))
         finally:
             cursor.close()
-        return list
+        return contact_list
 
     def destroy(self):
         self.connection.close()
+
+    def clear(self, s):
+        return re.sub(r"\(|\)|-", r"", s)
