@@ -10,6 +10,7 @@ def test_add_contact_to_group(app, db):
         contacts_without_group = app.orm.get_contacts_without_group()
     if len(db.get_group_list()) == 0:
         app.group.create(Group(name="group_preconditions"))
+        app.contact.go_to_home_page()
 
     all_groups = db.get_group_list()
     contact = random.choice(contacts_without_group)
