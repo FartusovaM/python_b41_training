@@ -1,6 +1,7 @@
 pytest
 pytest_bdd
-selenium
+selenium==2.44.0
 jsonpickle
 pony
 pymysql
+mysql-connector-python-rf==2.2.2
