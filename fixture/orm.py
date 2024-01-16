@@ -63,3 +63,6 @@ class ORMFixture:
     def get_contacts_without_group(self):
         return self.convert_contacts_to_model(
             select(c for c in ORMFixture.ORMContact if c.deprecated is None and len(c.groups) == 0))
+
+    def destroy(self):
+        pass

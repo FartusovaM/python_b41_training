@@ -4,7 +4,7 @@ import time
 import random
 
 
-def test_delete_contact_from_group(app, db):
+def test_delete_contact_from_group(app, db, orm):
     if len(db.get_contact_list()) == 0:
         app.contact.create(Contact(firstname="new_contact_preconditions"))
     if len(db.get_group_list()) == 0:
@@ -28,5 +28,5 @@ def test_delete_contact_from_group(app, db):
     app.contact.go_to_home_page()
     app.contact.select_group_in_filter(group.id)
     all_contacts_in_group = app.contact.find_elements_in_list()
-    assert sorted(all_contacts_in_group, key=Contact.id_or_max) == sorted(app.orm.get_contacts_in_group(group),
+    assert sorted(all_contacts_in_group, key=Contact.id_or_max) == sorted(orm.get_contacts_in_group(group),
                                                                           key=Contact.id_or_max)
