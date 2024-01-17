@@ -1,7 +1,5 @@
 from selenium.webdriver.support.ui import Select
 from model.contact import Contact
-from model.group import Group
-import re
 
 
 class ContactHelper:
@@ -38,6 +36,10 @@ class ContactHelper:
         wd.find_element_by_xpath(f"//input[@value='Delete']").click()
         wd.switch_to.alert.accept()
         self.contact_cache = None
+
+    def is_contact_on_page(self, id):
+        wd = self.app.wd
+        return len(wd.find_elements_by_css_selector("input[value='%s']" % id)) != 0
 
     def select_contact_by_id(self, id):
         wd = self.app.wd
@@ -188,11 +190,13 @@ class ContactHelper:
     def remove_from_group(self):
         wd = self.app.wd
         wd.find_element_by_xpath(f"//input[@name='remove']").click()
+        self.go_to_home_page()
 
     def add_contact_to_group(self, contact_id, group_id):
         self.select_contact_by_id(contact_id)
         self.select_group_in_list(group_id)
         self.add_contact_to_group_button()
+        self.go_to_home_page()
 
     def select_group_in_filter(self, id):
         wd = self.app.wd
