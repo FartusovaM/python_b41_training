@@ -23,5 +23,8 @@ def test_add_contact_to_group(app, db, orm):
 
     all_contacts_in_group = app.contact.find_elements_in_list()
     contact_from_ui = next((x for x in all_contacts_in_group if x.id == contact.id), None)
+
+    assert contact_from_ui is not None
+
     contact_from_group = orm.get_contact_in_group_by_id(group, contact_from_ui.id)
     assert contact_from_ui == contact_from_group
